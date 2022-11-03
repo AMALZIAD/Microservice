@@ -6,4 +6,6 @@ import sid.org.microservice.dto.BankAccountResponseDTO;
 
 public interface AccountService {
     public BankAccountResponseDTO addAccount(BankAccountRequestDTO bankAccountDTO);
+
+    BankAccountResponseDTO updateAccount(BankAccountRequestDTO bankAccountDTO, String id);
 }
