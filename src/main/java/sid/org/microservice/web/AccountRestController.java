@@ -1,22 +1,28 @@
 package sid.org.microservice.web;
 
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import sid.org.microservice.dto.BankAccountRequestDTO;
+import sid.org.microservice.dto.BankAccountResponseDTO;
 import sid.org.microservice.entities.BankAccount;
+import sid.org.microservice.mappers.AccountMapper;
 import sid.org.microservice.repositories.BankAccountRepository;
+import sid.org.microservice.service.AccountService;
 
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 public class AccountRestController {
-    private BankAccountRepository bankAccountRepository;
 
-    public AccountRestController(BankAccountRepository bankAccountRepository) {
-        this.bankAccountRepository = bankAccountRepository;
-    }
+    private BankAccountRepository bankAccountRepository;
+    private AccountService accountService;
+    private AccountMapper accountMapper;
+
     @GetMapping("/bankAccounts")
     public List <BankAccount>bankAccounts(){
         return bankAccountRepository.findAll();
@@ -28,9 +34,8 @@ public class AccountRestController {
                 .orElseThrow(()-> new RuntimeException(String.format("Account is not found",id)));
     }
     @PostMapping("/bankAccounts")
-    public BankAccount save(@RequestBody BankAccount bankAccount){
-        bankAccount.setId(UUID.randomUUID().toString());
-        return bankAccountRepository.save(bankAccount);
+    public BankAccountResponseDTO save(@RequestBody BankAccountRequestDTO requestDTO){
+        return accountService.addAccount(requestDTO);
     }
 
     @PutMapping("/bankAccounts/{id}")
